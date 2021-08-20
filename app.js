@@ -47,23 +47,24 @@ app.post("/compose", function(req, res){
   const post = {
     title: req.body.postTitle,
     content: req.body.postContent,
+    url: makeURL(req.body.postTitle),
   };
   posts.push(post);
   res.redirect("/");
 });
 
-app.get("/posts/:postTitle", function(req, res){
+app.get("/post/:postTitle", function(req, res){
   const requestedTitle = req.params.postTitle;
   console.log("requestedTitle: " + requestedTitle)
   posts.forEach(function(post){
     //Get post.title and convert to lower kebab case
-    const postTile = (post.title).replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g,'-').toLowerCase();
-    console.log(postTile);
-    if (postTile === requestedTitle){
-      console.log("MATCH");
-    } else {
-      console.log("No match");
-    }  
+    // const postUrlTitle = makeURL(post.title);
+    if (post.url === requestedTitle){
+      res.render("post",{
+        postTitle: post.title,
+        postContent: post.content,
+      });
+    } 
   });
  
   // let post = posts.find(function(post, index){
@@ -78,6 +79,10 @@ app.get("/posts/:postTitle", function(req, res){
 });
 
 
+
+function makeURL(text){
+  return text.replace(/[^a-zA-Z0-9 ]/g, "").replace(/\s+/g,'-').toLowerCase()
+};
 
 
 
